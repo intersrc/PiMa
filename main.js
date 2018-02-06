@@ -2,7 +2,7 @@ const electron = require('electron')
 // Module to control application life.
 const app = electron.app
 // Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow
+const { BrowserWindow, Menu, globalShortcut } = electron
 
 const path = require('path')
 const url = require('url')
@@ -13,7 +13,13 @@ let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({ width: 1280, height: 720 })
+  mainWindow = new BrowserWindow({
+    // webPreferences: {
+    //   webSecurity: false
+    // },
+    width: 1280,
+    height: 720
+  })
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
@@ -34,6 +40,14 @@ function createWindow () {
   })
 
   mainWindow.maximize()
+
+  // mainWindow.webContents.openDevTools({ detach: true })
+
+  globalShortcut.register('ctrl+shift+i', function () {
+    mainWindow.webContents.openDevTools({ detach: true })
+  })
+
+  Menu.setApplicationMenu(null)
 }
 
 // This method will be called when Electron has finished

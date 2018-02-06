@@ -1,5 +1,8 @@
 {
   "root": true,
   "extends": ["vue"],
-  "plugins": ["vue"]
+  "plugins": ["vue"],
+  "globals": {
+    "fs": false
+  }
 }

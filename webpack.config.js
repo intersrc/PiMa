@@ -4,10 +4,12 @@ var postcss = require('./postcss.config')
 
 module.exports = function (env) {
   var config = {
+    // target: 'node',
     resolve: {
       extensions: ['.js', '.vue', '.json'],
       alias: {
-        'pima-store': path.resolve(__dirname, './src/vuex'),
+        'pima-utils': path.resolve(__dirname, './src/utils'),
+        'pima-store': path.resolve(__dirname, './src/store'),
         'node_modules': path.resolve(__dirname, './node_modules')
       }
     },
