@@ -5,7 +5,7 @@
 </template>
 
 <style lang="stylus">
-  *
+  body
     background-color black
     color white
 </style>

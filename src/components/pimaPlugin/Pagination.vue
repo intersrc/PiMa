@@ -1,10 +1,39 @@
 <template lang="pug">
-  div
+  div(class="pima-pagination")
+    div(
+      class="pima-pagination__left",
+      @click="onPre"
+    )
+      i(class="fas fa-arrow-circle-left fa-5x")
+    div(
+      class="pima-pagination__right",
+      @click="onNext"
+    )
+      i(class="fas fa-arrow-circle-right fa-5x")
 </template>
 
 <style lang="stylus">
+  .pima-pagination__left, .pima-pagination__right
+    display: inline-block
+    position fixed
+    top: 50%
+    margin-top: -40px
+    cursor pointer
+  .pima-pagination__left
+    left: 0
+  .pima-pagination__right
+    right: 0
 </style>
 
 <script>
-  export default {}
+  export default {
+    methods: {
+      onPre () {
+        this.$emit('pre')
+      },
+      onNext () {
+        this.$emit('next')
+      }
+    }
+  }
 </script>

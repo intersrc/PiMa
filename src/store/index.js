@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import * as gTypes from 'pima-store/getterTypes'
 import * as mTypes from 'pima-store/mutationTypes'
 import { cover } from 'pima-utils'
 
@@ -30,10 +31,55 @@ Vue.use(Vuex)
 */
 
 const state = {
-  currentBaseIndex: 0,
-  currentTag: '',
+  current: {
+    baseIndex: 0,
+    tagId: '',
+    page: 0
+  },
   bases: [],
   tags: {}
+}
+
+const getters = {
+  [gTypes.IS_STATIC] (state) {
+    return process.env.NODE_ENV === 'static'
+  },
+  [gTypes.PER_PAGE] (state) {
+    const isStatic = getters[gTypes.IS_STATIC](state)
+    if (isStatic) {
+      return 10
+    } else {
+      return 100
+    }
+  },
+  [gTypes.CURRENT_BASE] (state) {
+    return state.bases[state.current.baseIndex]
+  },
+  [gTypes.CURRENT_PICTURES] (state) {
+    const currentBase = getters[gTypes.CURRENT_BASE](state)
+    const tagId = state.current.tagId
+    let pictures
+    if (tagId) {
+      pictures = currentBase ? currentBase.tagged[tagId] : []
+    } else {
+      pictures = []
+      state.bases.forEach(base => {
+        pictures = pictures.concat(Object.keys(base.all).map(id => base.all[id]))
+      })
+    }
+    return pictures
+  },
+  [gTypes.CURRENT_PAGED_PICTURES] (state) {
+    const pictures = getters[gTypes.CURRENT_PICTURES](state)
+    const perPage = getters[gTypes.PER_PAGE](state)
+    const start = perPage * state.current.page
+    return pictures.slice(start, start + perPage)
+  },
+  [gTypes.PAGE_LENGTH] (state) {
+    const pictures = getters[gTypes.CURRENT_PICTURES](state)
+    const perPage = getters[gTypes.PER_PAGE](state)
+    return Math.ceil(pictures.length / perPage)
+  }
 }
 
 const actions = {
@@ -42,11 +88,21 @@ const actions = {
 const mutations = {
   [mTypes.SET] (state, payload) {
     cover(state, payload)
+  },
+  [mTypes.SET_PAGE] (state, { page, delta }) {
+    const pageLength = getters[gTypes.PAGE_LENGTH](state)
+    if (delta) {
+      page = state.current.page + delta
+    }
+    page = Math.max(0, page)
+    page = Math.min(page, pageLength - 1)
+    state.current.page = page
   }
 }
 
 export default new Vuex.Store({
   state,
+  getters,
   actions,
   mutations,
   modules: {}

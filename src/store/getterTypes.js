@@ -1,0 +1,6 @@
+export const IS_STATIC = 'IS_STATIC'
+export const PER_PAGE = 'PER_PAGE'
+export const PAGE_LENGTH = 'PAGE_LENGTH'
+export const CURRENT_BASE = 'CURRENT_BASE'
+export const CURRENT_PICTURES = 'CURRENT_PICTURES'
+export const CURRENT_PAGED_PICTURES = 'CURRENT_PAGED_PICTURES'

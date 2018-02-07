@@ -1,7 +1,11 @@
 <template lang="pug">
   div(class="pima-explorer")
+    pima-pagination(
+      @pre="onPre",
+      @next="onNext"
+    )
     div(
-      v-for="p in currentPictures",
+      v-for="p in currentPagedPictures",
       class="pima-explorer__thumb"
       :style="{ backgroundImage: `url(${getSrc(p)})` }",
       @click="onPicClick"
@@ -12,7 +16,6 @@
   @import '~pima-components/style.styl'
   .pima-explorer
     text-align center
-    position relative
   .pima-explorer__thumb
     display inline-block
     width $thumb-size
@@ -28,10 +31,18 @@
 </style>
 
 <script>
+  import * as mTypes from 'pima-store/mutationTypes'
+
   export default {
     methods: {
       onPicClick () {
 
+      },
+      onPre () {
+        this.$store.commit(mTypes.SET_PAGE, { delta: -1 })
+      },
+      onNext () {
+        this.$store.commit(mTypes.SET_PAGE, { delta: 1 })
       }
     }
   }
