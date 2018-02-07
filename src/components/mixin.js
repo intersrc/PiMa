@@ -26,11 +26,15 @@ export default {
   },
   methods: {
     getSrc (picture) {
-      const { path } = picture
-      if (this.isStatic) {
-        return `./web/${path}`
+      if (picture) {
+        const { path } = picture
+        if (this.isStatic) {
+          return `./web/${path}`
+        } else {
+          return `file:///${this.currentBase.path}${path}`
+        }
       } else {
-        return `file:///${this.currentBase.path}${path}`
+        return ''
       }
     }
   }

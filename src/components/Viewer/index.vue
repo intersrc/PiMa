@@ -1,8 +1,11 @@
 <template lang="pug">
   div(class="pima-viewer")
     pima-pagination(
-      :page="0",
-      :page-length="1"
+      :page="page",
+      :page-length="pageLength",
+      @page="onPage",
+      @pre="onPre",
+      @next="onNext"
     )
     img(:src="getSrc(currentPicture)")
 </template>
@@ -14,7 +17,29 @@
 
 <script>
   import mixin from 'pima-components/mixin'
+  import * as gTypes from 'pima-store/getterTypes'
+  import * as mTypes from 'pima-store/mutationTypes'
+
   export default {
-    mixins: [mixin]
+    mixins: [mixin],
+    computed: {
+      page () {
+        return this.$store.getters[gTypes.CURRENT_PICTURE_PAGE]
+      },
+      pageLength () {
+        return this.currentPictures.length
+      }
+    },
+    methods: {
+      onPage ({ page }) {
+        this.$store.commit(mTypes.SET_PICTURE_BY_PAGE, { page })
+      },
+      onPre () {
+        this.$store.commit(mTypes.SET_PICTURE_BY_PAGE, { delta: -1 })
+      },
+      onNext () {
+        this.$store.commit(mTypes.SET_PICTURE_BY_PAGE, { delta: 1 })
+      }
+    }
   }
 </script>

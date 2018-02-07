@@ -87,7 +87,11 @@ const getters = {
   },
   [gTypes.CURRENT_PICTURE] (state) {
     const currentBase = getters[gTypes.CURRENT_BASE](state)
-    return currentBase.all[state.current.pictureId]
+    return currentBase ? currentBase.all[state.current.pictureId] : null
+  },
+  [gTypes.CURRENT_PICTURE_PAGE] (state) {
+    const pictures = getters[gTypes.CURRENT_PICTURES](state)
+    return pictures.findIndex(picture => picture.id === state.current.pictureId)
   }
 }
 
@@ -108,6 +112,20 @@ const mutations = {
     state.current.page = page
   },
   [mTypes.SET_PICTURE] (state, { pictureId }) {
+    state.current = {
+      ...state.current,
+      pictureId
+    }
+  },
+  [mTypes.SET_PICTURE_BY_PAGE] (state, { page, delta }) {
+    const pictures = getters[gTypes.CURRENT_PICTURES](state)
+    if (delta) {
+      const currentPicturePage = getters[gTypes.CURRENT_PICTURE_PAGE](state)
+      page = currentPicturePage + delta
+    }
+    page = Math.max(0, page)
+    page = Math.min(page, pictures.length - 1)
+    const pictureId = pictures[page].id
     state.current = {
       ...state.current,
       pictureId

@@ -21,16 +21,22 @@
 </template>
 
 <style lang="stylus">
+  .pima-pagination__select
+    padding 16px
+    position absolute
+    top 0
+    width 100%
+    z-index -1
   .pima-pagination__left, .pima-pagination__right
-    display: inline-block
+    display inline-block
     position fixed
-    top: 50%
-    margin-top: -40px
+    top 50%
+    margin-top -40px
     cursor pointer
   .pima-pagination__left
-    left: 0
+    left 0
   .pima-pagination__right
-    right: 0
+    right 0
 </style>
 
 <script>
