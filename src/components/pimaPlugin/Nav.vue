@@ -119,7 +119,7 @@
         this.$emit('next')
       },
       onScale () {
-        this.$emit('scale', { navHeight: this.$el.clientHeight })
+        this.$emit('scale')
       },
       onScalePlus () {
         this.$emit('scale-plus')

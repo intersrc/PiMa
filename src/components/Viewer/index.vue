@@ -1,6 +1,7 @@
 <template lang="pug">
   div(class="pima-viewer")
     pima-nav(
+      ref="nav",
       :p-page="page",
       :p-page-length="pageLength",
       @page="onPage",
@@ -14,7 +15,8 @@
       ref="img",
       class="pima-viewer__img",
       :style="imgStyle",
-      :src="getSrc(currentPicture)"
+      :src="getSrc(currentPicture)",
+      @click="onClickImg"
     )
 </template>
 
@@ -54,7 +56,37 @@
         }
       }
     },
+    mounted () {
+      window.addEventListener('keydown', this.onWindowKeydown)
+    },
+    beforeDestroy () {
+      window.removeEventListener('keydown', this.onWindowKeydown)
+
+    },
     methods: {
+      onWindowKeydown (event) {
+        switch (event.key) {
+          case 'a':
+          case 'ArrowLeft':
+            this.onPre()
+            break
+          case 'd':
+          case 'ArrowRight':
+            this.onNext()
+            break
+          case 'w':
+          case 'ArrowUp':
+            this.onScaleMinus()
+            break
+            case 's':
+          case 'ArrowDown':
+            this.onScalePlus()
+            break
+          default:
+            this.onScale()
+            break
+        }
+      },
       updateImgStyleHeight () {
         if (this.$refs.img) {
           const scale = this.current.scale
@@ -73,7 +105,8 @@
       onNext () {
         this.$store.commit(mTypes.SET_PICTURE_BY_PAGE, { delta: 1 })
       },
-      onScale ({ navHeight }) {
+      onScale () {
+        const navHeight = this.$refs.nav.$el.clientHeight
         const naturalHeight = this.$refs.img.naturalHeight
         const viewerHeight = window.innerHeight - navHeight - this.imgStyleMargin * 2
         this.$store.commit(mTypes.SET_SCALE, { scale: this.current.scale === 1 ? viewerHeight / naturalHeight : 1 })
@@ -86,6 +119,9 @@
       onScaleMinus () {
         this.$store.commit(mTypes.SET_SCALE, { scale: this.current.scale / 2 })
         this.updateImgStyleHeight()
+      },
+      onClickImg () {
+        this.onScale()
       }
     }
   }
