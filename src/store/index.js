@@ -7,18 +7,32 @@ Vue.use(Vuex)
 
 /*
 {
-  all: [],
-  tags: {
-    'xxx': {
-      all: [],
-      tags: {}
+  bases: [{
+    path: '',
+    all: {
+      'pid': {
+        path: '',
+        scannedTime: 123456
+      }
+    },
+    tagged: {
+      'tid': ['pid']
     }
+  }],
+  tags: {
+    'tid': {
+      name: 'xxx',
+      children: ['tid1', 'tid2'] // 可能存在多个父标签
+    },
+    'tid1': { ... }
   }
 }
 */
 
 const state = {
-  all: [],
+  currentBaseIndex: 0,
+  currentTag: '',
+  bases: [],
   tags: {}
 }
 

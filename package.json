@@ -6,6 +6,7 @@
   "scripts": {
     "start": "electron .",
     "lint": "eslint . --ext .js --ext .vue",
+    "serve": "webpack-dev-server --inline -d --env.debug=static",
     "dev": "webpack -d --watch --env",
     "build": "webpack -p --env.production"
   },
@@ -34,10 +35,13 @@
     "url-loader": "^0.6.2",
     "vue-loader": "^14.1.1",
     "vue-template-compiler": "^2.5.13",
-    "webpack": "^3.10.0"
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.11.1"
   },
   "dependencies": {
     "jquery": "^3.3.1",
+    "lodash": "^4.17.5",
+    "object-hash": "^1.2.0",
     "vue": "^2.5.13",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"

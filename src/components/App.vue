@@ -1,11 +1,13 @@
 <template lang="pug">
-  router-view
+  div
+    router-view
+    pre(v-if="isStatic") {{ JSON.stringify($store.state, null, 2) }}
 </template>
 
 <style lang="stylus">
   *
-    background-color: black
-    color: white
+    background-color black
+    color white
 </style>
 
 <script>

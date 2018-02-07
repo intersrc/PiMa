@@ -8,8 +8,9 @@ module.exports = function (env) {
     resolve: {
       extensions: ['.js', '.vue', '.json'],
       alias: {
-        'pima-utils': path.resolve(__dirname, './src/utils'),
+        'pima-components': path.resolve(__dirname, './src/components'),
         'pima-store': path.resolve(__dirname, './src/store'),
+        'pima-utils': path.resolve(__dirname, './src/utils'),
         'node_modules': path.resolve(__dirname, './node_modules')
       }
     },
@@ -48,7 +49,7 @@ module.exports = function (env) {
     plugins: [
       new webpack.DefinePlugin({
         'process.env': {
-          NODE_ENV: env.production ? '"production"' : '"development"'
+          NODE_ENV: env.production ? '"production"' : (`"${env.debug}"` || '"development"')
         }
       })
     ]

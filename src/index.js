@@ -2,12 +2,16 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 import App from './components/App.vue'
-import store from './store'
+import mixin from './components/mixin'
+import pimaPlugin from './components/pimaPlugin'
 import routes from './routes'
+import store from './store'
 import $ from 'jquery'
 
 Vue.use(VueRouter)
 Vue.use(Vuex)
+Vue.mixin(mixin)
+Vue.use(pimaPlugin)
 
 const $el = $('#app')
 
@@ -27,15 +31,33 @@ new Vue({
 // init database
 
 import * as mTypes from 'pima-store/mutationTypes'
+import hash from 'object-hash'
 
-const dir = 'D:/Downloads/'
+const path = 'D:/Downloads/'
+const createId = (file) => `${hash(file)}-${hash(Math.random())}`
 
-fs.readdir(dir, (err, files) => {
+fs.readdir(path, (err, files) => {
   if (err) {
     console.error(err)
+    window.alert(err)
   } else {
+    const all = {}
+    files.map(file => {
+      let id = createId(file)
+      while (all[id]) {
+        id = createId(file)
+      }
+      all[id] = {
+        path: file,
+        scannedTime: (new Date()).getTime()
+      }
+    })
     store.commit(mTypes.SET, {
-      all: files.map(f => `${dir}/${f}`),
+      bases: [{
+        path,
+        all,
+        tagged: {}
+      }],
       tags: {}
     })
   }
