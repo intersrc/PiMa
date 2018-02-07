@@ -1,6 +1,6 @@
 <template lang="pug">
   div(class="pima-viewer")
-    pima-pagination(
+    pima-nav(
       :page="page",
       :page-length="pageLength",
       @page="onPage",

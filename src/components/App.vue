@@ -1,6 +1,5 @@
 <template lang="pug">
   div
-    app-nav
     router-view
     pre(v-if="isStatic") {{ JSON.stringify($store.state, null, 2) }}
 </template>
@@ -18,12 +17,10 @@
 
 <script>
   import mixin from 'pima-components/mixin'
-  import AppNav from './AppNav'
 
   export default {
     mixins: [mixin],
     components: {
-      AppNav
     }
   }
 </script>
