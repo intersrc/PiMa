@@ -6,5 +6,8 @@
 </style>
 
 <script>
-  export default {}
+  import mixin from 'pima-components/mixin'
+  export default {
+    mixins: [mixin]
+  }
 </script>

@@ -1,5 +1,13 @@
 <template lang="pug">
   div(class="pima-pagination")
+    div(class="pima-pagination__select")
+      select(v-model='selectValue')
+        option(
+          v-for="n in pageLength",
+          :value="n - 1"
+        ) {{ n }}
+      span &nbsp;/&nbsp;
+      span {{ pageLength }}
     div(
       class="pima-pagination__left",
       @click="onPre"
@@ -27,6 +35,20 @@
 
 <script>
   export default {
+    props: {
+      page: Number,
+      pageLength: Number
+    },
+    computed: {
+      selectValue: {
+        get () {
+          return this.page
+        },
+        set (page) {
+          this.$emit('page', { page })
+        }
+      }
+    },
     methods: {
       onPre () {
         this.$emit('pre')

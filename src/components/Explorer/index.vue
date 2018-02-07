@@ -1,6 +1,9 @@
 <template lang="pug">
   div(class="pima-explorer")
     pima-pagination(
+      :page="current.page",
+      :page-length="pageLength",
+      @page="onPage",
       @pre="onPre",
       @next="onNext"
     )
@@ -8,7 +11,7 @@
       v-for="p in currentPagedPictures",
       class="pima-explorer__thumb"
       :style="{ backgroundImage: `url(${getSrc(p)})` }",
-      @click="onPicClick"
+      @click="onPicClick(p)"
     )
 </template>
 
@@ -31,12 +34,18 @@
 </style>
 
 <script>
+  import mixin from 'pima-components/mixin'
   import * as mTypes from 'pima-store/mutationTypes'
 
   export default {
+    mixins: [mixin],
     methods: {
-      onPicClick () {
-
+      onPicClick (picture) {
+        this.$store.commit(mTypes.SET_PICTURE, { pictureId: picture.id })
+        this.$router.push('viewer')
+      },
+      onPage ({ page }) {
+        this.$store.commit(mTypes.SET_PAGE, { page })
       },
       onPre () {
         this.$store.commit(mTypes.SET_PAGE, { delta: -1 })

@@ -4,6 +4,8 @@ import * as gTypes from 'pima-store/getterTypes'
 import * as mTypes from 'pima-store/mutationTypes'
 import { cover } from 'pima-utils'
 
+import viewer from './modules/viewer'
+
 Vue.use(Vuex)
 
 /*
@@ -12,6 +14,7 @@ Vue.use(Vuex)
     path: '',
     all: {
       'pid': {
+        id: 'pid',
         path: '',
         scannedTime: 123456
       }
@@ -22,6 +25,7 @@ Vue.use(Vuex)
   }],
   tags: {
     'tid': {
+      id: 'tid',
       name: 'xxx',
       children: ['tid1', 'tid2'] // 可能存在多个父标签
     },
@@ -34,7 +38,8 @@ const state = {
   current: {
     baseIndex: 0,
     tagId: '',
-    page: 0
+    page: 0,
+    pictureId: ''
   },
   bases: [],
   tags: {}
@@ -79,6 +84,10 @@ const getters = {
     const pictures = getters[gTypes.CURRENT_PICTURES](state)
     const perPage = getters[gTypes.PER_PAGE](state)
     return Math.ceil(pictures.length / perPage)
+  },
+  [gTypes.CURRENT_PICTURE] (state) {
+    const currentBase = getters[gTypes.CURRENT_BASE](state)
+    return currentBase.all[state.current.pictureId]
   }
 }
 
@@ -97,6 +106,12 @@ const mutations = {
     page = Math.max(0, page)
     page = Math.min(page, pageLength - 1)
     state.current.page = page
+  },
+  [mTypes.SET_PICTURE] (state, { pictureId }) {
+    state.current = {
+      ...state.current,
+      pictureId
+    }
   }
 }
 
@@ -105,5 +120,7 @@ export default new Vuex.Store({
   getters,
   actions,
   mutations,
-  modules: {}
+  modules: {
+    viewer
+  }
 })

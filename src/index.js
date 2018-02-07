@@ -2,7 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 import App from './components/App.vue'
-import mixin from './components/mixin'
 import pimaPlugin from './components/pimaPlugin'
 import routes from './routes'
 import store from './store'
@@ -10,7 +9,6 @@ import $ from 'jquery'
 
 Vue.use(VueRouter)
 Vue.use(Vuex)
-Vue.mixin(mixin)
 Vue.use(pimaPlugin)
 
 const $el = $('#app')
@@ -48,6 +46,7 @@ fs.readdir(path, (err, files) => {
         id = createId(file)
       }
       all[id] = {
+        id,
         path: file,
         scannedTime: (new Date()).getTime()
       }

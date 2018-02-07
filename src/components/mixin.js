@@ -2,6 +2,12 @@ import * as gTypes from 'pima-store/getterTypes'
 
 export default {
   computed: {
+    current () {
+      return this.$store.state.current
+    },
+    pageLength () {
+      return this.$store.getters[gTypes.PAGE_LENGTH]
+    },
     isStatic () {
       return this.$store.getters[gTypes.IS_STATIC]
     },
@@ -13,6 +19,9 @@ export default {
     },
     currentPagedPictures () {
       return this.$store.getters[gTypes.CURRENT_PAGED_PICTURES]
+    },
+    currentPicture () {
+      return this.$store.getters[gTypes.CURRENT_PICTURE]
     }
   },
   methods: {
