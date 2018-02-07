@@ -21,9 +21,10 @@
 <style lang="stylus">
   @import '~pima-components/style.styl'
   .pima-viewer
-    text-align: center
+    text-align center
   .pima-viewer__img
-    border: $border
+    border $border
+    user-select none
 </style>
 
 <script>
