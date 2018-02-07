@@ -17,6 +17,7 @@ function createWindow () {
     // webPreferences: {
     //   webSecurity: false
     // },
+    // frame: false,
     width: 1280,
     height: 720
   })

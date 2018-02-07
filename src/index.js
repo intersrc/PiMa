@@ -1,3 +1,7 @@
+import 'normalize.css'
+import 'noty/lib/noty.css'
+import 'noty/lib/themes/mint.css'
+// import 'noty/lib/themes/sunset.css'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
@@ -28,8 +32,10 @@ new Vue({
 
 // init database
 
+import * as gTypes from 'pima-store/getterTypes'
 import * as mTypes from 'pima-store/mutationTypes'
 import hash from 'object-hash'
+import Noty from 'noty'
 
 const path = 'D:/Downloads/'
 const createId = (file) => `${hash(file)}-${hash(Math.random())}`
@@ -51,13 +57,32 @@ fs.readdir(path, (err, files) => {
         scannedTime: (new Date()).getTime()
       }
     })
+    const bases = [{
+      path,
+      all,
+      tagged: {}
+    }]
+    const tags = {}
     store.commit(mTypes.SET, {
-      bases: [{
-        path,
-        all,
-        tagged: {}
-      }],
-      tags: {}
+      bases,
+      tags
     })
+
+    if (!store.getters[gTypes.IS_STATIC]) {
+      const write = (path, text, message) => {
+        fs.mkdir('data', 0o777, () => {
+          fs.writeFile(path, text, 'utf8', (err) => {
+            if (err) throw err
+            new Noty({
+              // theme: 'sunset',
+              timeout: 3000,
+              text: message
+            }).show()
+          })
+        })
+      }
+      write(`data/${hash(path)}.bases.json`, JSON.stringify(bases, null, 2), 'bases saved.')
+      write(`data/${hash(path)}.tags.json`, JSON.stringify(tags, null, 2), 'tags saved.')
+    }
   }
 })

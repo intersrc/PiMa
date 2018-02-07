@@ -1,4 +1,5 @@
-dist
-node_modules
-web
-index-web.html
+/data
+/dist
+/node_modules
+/web
+/index-web.html

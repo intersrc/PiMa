@@ -22,11 +22,10 @@
 
 <style lang="stylus">
   .pima-pagination__select
-    padding 16px
+    padding 12px
     position absolute
     top 0
     width 100%
-    z-index -1
   .pima-pagination__left, .pima-pagination__right
     display inline-block
     position fixed

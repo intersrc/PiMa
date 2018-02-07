@@ -5,6 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "test": "webpack -d --env && electron .",
     "lint": "eslint . --ext .js --ext .vue",
     "serve": "webpack-dev-server --inline -d --env.debug=static",
     "dev": "webpack -d --watch --env",
@@ -45,6 +46,8 @@
   "dependencies": {
     "jquery": "^3.3.1",
     "lodash": "^4.17.5",
+    "normalize.css": "^7.0.0",
+    "noty": "^3.2.0-beta",
     "object-hash": "^1.2.0",
     "vue": "^2.5.13",
     "vue-router": "^3.0.1",

@@ -7,12 +7,18 @@
       @pre="onPre",
       @next="onNext"
     )
-    img(:src="getSrc(currentPicture)")
+    img(
+      class="pima-viewer__img",
+      :src="getSrc(currentPicture)"
+    )
 </template>
 
 <style lang="stylus">
+  @import '~pima-components/style.styl'
   .pima-viewer
     text-align: center
+  .pima-viewer__img
+    border: $border
 </style>
 
 <script>
