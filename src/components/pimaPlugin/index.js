@@ -1,9 +1,7 @@
 import PimaNav from './Nav'
-import PimaPagination from './Pagination'
 
 const components = {
-  PimaNav,
-  PimaPagination
+  PimaNav
 }
 
 const plugin = {

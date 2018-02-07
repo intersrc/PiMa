@@ -1,8 +1,8 @@
 <template lang="pug">
   div(class="pima-explorer")
     pima-nav(
-      :page="current.page",
-      :page-length="pageLength",
+      :p-page="current.page",
+      :p-page-length="pageLength",
       @page="onPage",
       @pre="onPre",
       @next="onNext"

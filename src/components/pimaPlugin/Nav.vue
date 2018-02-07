@@ -4,43 +4,73 @@
       tr
         td(style="text-align: left;")
           div(
-            class="pima-nav__explorer",
+            class="pima-nav__button",
             @click="onExplorerClick"
           )
             i(class="fas fa-th fa-3x")
+          div(
+            class="pima-nav__button",
+            @click="onScalePlus"
+          )
+            i(class="fas fa-search-plus fa-3x")
+          div(
+            class="pima-nav__button",
+            @click="onScaleMinus"
+          )
+            i(class="fas fa-search-minus fa-3x")
+          div(
+            class="pima-nav__button",
+            @click="onScale"
+          )
+            i(class="fas fa-search fa-3x")
+          div(
+            class="pima-nav__item"
+          ) {{ current.scale }}
         td(style="text-align: right;")
           div(class="pima-nav__select")
             select(v-model='selectValue')
               option(
-                v-for="n in pageLength",
+                v-for="n in pPageLength",
                 :value="n - 1"
               ) {{ n }}
             span &nbsp;/&nbsp;
-            span {{ pageLength }}
+            span {{ pPageLength }}
     div(
       class="pima-nav__left",
       @click="onPre"
     )
-      i(class="fas fa-arrow-circle-left fa-5x")
+      i(class="fas fa-arrow-circle-left fa-7x")
     div(
       class="pima-nav__right",
       @click="onNext"
     )
-      i(class="fas fa-arrow-circle-right fa-5x")
+      i(class="fas fa-arrow-circle-right fa-7x")
 </template>
 
 <style lang="stylus">
   @import '~pima-components/style.styl'
-  .pima-nav
-    height 48px
-  .pima-nav__table
-    width: 100%
-    border-bottom: $border
-    td
-      height: 48px
-      padding: 0 8px
-  .pima-nav__explorer
+  pima-nav-item()
     display inline-block
+    vertical-align middle
+    &:not(:first-child)
+      margin-left 16px
+  .pima-nav
+    height 54px
+  .pima-nav__table
+    width 100%
+    border-bottom $border
+    background black
+    position fixed
+    top: 0
+    left: 0
+    z-index: 1
+    td
+      height 48px
+      padding 0 16px
+  .pima-nav__item
+    pima-nav-item()
+  .pima-nav__button
+    pima-nav-item()
     cursor pointer
   .pima-nav__left, .pima-nav__right
     display inline-block
@@ -48,6 +78,10 @@
     top 50%
     margin-top -40px
     cursor pointer
+    opacity 0.5
+    transition all 0.3s
+    &:hover
+      opacity 1
   .pima-nav__left
     left 0
   .pima-nav__right
@@ -56,17 +90,18 @@
 
 <script>
   import mixin from 'pima-components/mixin'
+  import * as mTypes from 'pima-store/mutationTypes'
 
   export default {
     mixins: [mixin],
     props: {
-      page: Number,
-      pageLength: Number
+      pPage: Number,
+      pPageLength: Number
     },
     computed: {
       selectValue: {
         get () {
-          return this.page
+          return this.pPage
         },
         set (page) {
           this.$emit('page', { page })
@@ -82,6 +117,15 @@
       },
       onNext () {
         this.$emit('next')
+      },
+      onScale () {
+        this.$emit('scale', { navHeight: this.$el.clientHeight })
+      },
+      onScalePlus () {
+        this.$emit('scale-plus')
+      },
+      onScaleMinus () {
+        this.$emit('scale-minus')
       }
     }
   }

@@ -9,13 +9,10 @@ import App from './components/App.vue'
 import pimaPlugin from './components/pimaPlugin'
 import routes from './routes'
 import store from './store'
-import $ from 'jquery'
 
 Vue.use(VueRouter)
 Vue.use(Vuex)
 Vue.use(pimaPlugin)
-
-const $el = $('#app')
 
 const router = new VueRouter({
   mode: 'hash',
@@ -26,7 +23,7 @@ const router = new VueRouter({
 new Vue({
   router,
   store,
-  el: $el[0],
+  el: document.getElementById('app'),
   render: h => h(Vue.component('app', App))
 })
 

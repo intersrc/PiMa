@@ -37,6 +37,7 @@ Vue.use(Vuex)
 const state = {
   current: {
     baseIndex: 0,
+    scale: 1,
     tagId: '',
     page: 0,
     pictureId: ''
@@ -112,10 +113,7 @@ const mutations = {
     state.current.page = page
   },
   [mTypes.SET_PICTURE] (state, { pictureId }) {
-    state.current = {
-      ...state.current,
-      pictureId
-    }
+    state.current.pictureId = pictureId
   },
   [mTypes.SET_PICTURE_BY_PAGE] (state, { page, delta }) {
     const pictures = getters[gTypes.CURRENT_PICTURES](state)
@@ -126,10 +124,10 @@ const mutations = {
     page = Math.max(0, page)
     page = Math.min(page, pictures.length - 1)
     const pictureId = pictures[page].id
-    state.current = {
-      ...state.current,
-      pictureId
-    }
+    state.current.pictureId = pictureId
+  },
+  [mTypes.SET_SCALE] (state, { scale }) {
+    state.current.scale = scale
   }
 }
 
