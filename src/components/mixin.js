@@ -5,6 +5,9 @@ export default {
     current () {
       return this.$store.state.current
     },
+    tags () {
+      return this.$store.state.tags
+    },
     pageLength () {
       return this.$store.getters[gTypes.PAGE_LENGTH]
     },

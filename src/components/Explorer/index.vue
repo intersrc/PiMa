@@ -10,7 +10,7 @@
     div(
       v-for="p in currentPagedPictures",
       class="pima-explorer__thumb"
-      :style="{ backgroundImage: `url(${getSrc(p)})` }",
+      :style="{ backgroundImage: `url('${getSrc(p)}')` }",
       @click="onPicClick(p)"
     )
 </template>

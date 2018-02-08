@@ -6,7 +6,7 @@ import * as gTypes from 'pima-store/getterTypes'
 import * as mTypes from 'pima-store/mutationTypes'
 import { cover, notySuccess, notyError } from 'pima-utils'
 
-import viewer from './modules/viewer'
+import tag from './modules/tag'
 
 Vue.use(Vuex)
 
@@ -30,6 +30,7 @@ const writeFile = (path, text, successMessage) => {
       'pid': {
         id: 'pid',
         path: '',
+        stats: {},
         scannedTime: 123456
       }
     },
@@ -41,6 +42,7 @@ const writeFile = (path, text, successMessage) => {
     'tid': {
       id: 'tid',
       name: 'xxx',
+      color: '#fff',
       children: ['tid1', 'tid2'] // 可能存在多个父标签
     },
     'tid1': { ... }
@@ -57,7 +59,28 @@ const state = {
     pictureId: ''
   },
   bases: [],
-  tags: {}
+  tags: {
+    '0': {
+      id: '0',
+      name: 'ALL',
+      children: ['1', '2']
+    },
+    '1': {
+      id: '1',
+      name: 'AAA',
+      children: []
+    },
+    '2': {
+      id: '2',
+      name: 'BBB',
+      children: []
+    },
+    '3': {
+      id: '3',
+      name: 'CCC',
+      children: []
+    }
+  }
 }
 
 const getters = {
@@ -87,6 +110,13 @@ const getters = {
         pictures = pictures.concat(Object.keys(base.all).map(id => base.all[id]))
       })
     }
+    // 排序
+    const key = 'birthtime'
+    pictures.sort((a, b) => {
+      const at = a.stats ? a.stats[key] : -1
+      const bt = b.stats ? b.stats[key] : -1
+      return -(at - bt)
+    })
     return pictures
   },
   [gTypes.CURRENT_PAGED_PICTURES] (state) {
@@ -156,9 +186,17 @@ const actions = {
             while (all[id]) {
               id = createFileId(file)
             }
+            const stats = fs.statSync(`${path}${file}`)
             all[id] = {
               id,
               path: file,
+              stats: {
+                ...stats,
+                atime: stats.atime ? stats.atime.getTime() : -1,
+                mtime: stats.mtime ? stats.mtime.getTime() : -1,
+                ctime: stats.ctime ? stats.ctime.getTime() : -1,
+                birthtime: stats.birthtime ? stats.birthtime.getTime() : -1
+              },
               scannedTime: (new Date()).getTime()
             }
           })
@@ -239,6 +277,6 @@ export default new Vuex.Store({
   actions,
   mutations,
   modules: {
-    viewer
+    tag
   }
 })

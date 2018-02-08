@@ -26,6 +26,11 @@
           div(
             class="pima-nav__item"
           ) {{ current.scale }}
+          div(
+            class="pima-nav__button",
+            @click="onTags"
+          )
+            i(class="fas fa-tags fa-3x")
         td(style="text-align: right;")
           div(class="pima-nav__select")
             select(v-model='selectValue')
@@ -132,6 +137,9 @@
       },
       onScaleMinus () {
         this.$emit('scale-minus')
+      },
+      onTags () {
+        this.$router.push('tag-manage')
       }
     }
   }

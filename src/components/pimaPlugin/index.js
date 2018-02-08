@@ -1,7 +1,11 @@
 import PimaNav from './Nav'
+import PimaTag from './Tag'
+import PimaTags from './Tags'
 
 const components = {
-  PimaNav
+  PimaNav,
+  PimaTag,
+  PimaTags
 }
 
 const plugin = {
