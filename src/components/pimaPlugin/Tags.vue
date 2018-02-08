@@ -6,7 +6,8 @@
       v-for="tag in tags",
       :key="tag.id",
       :tag="tag",
-      :checked-map="checkedMap"
+      :checked-map="checkedMap",
+      @click="onTagClick"
     )
 </template>
 
@@ -28,18 +29,9 @@
         }
       }
     },
-    computed: {
-      list () {
-        const list = []
-        for (const tagId in this.tags) {
-          const tag = this.tags[tagId]
-          list.push({
-            ...tag,
-            color: tag.color || '#fff',
-            isChecked: this.checkedMap[tagId]
-          })
-        }
-        return list
+    methods: {
+      onTagClick ({ tag }) {
+        this.$emit('tag-click', { tag })
       }
     }
   }

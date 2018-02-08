@@ -3,9 +3,11 @@
     pima-nav(
       :p-page="current.page",
       :p-page-length="pageLength",
+      :checked-map="checkedMap",
       @page="onPage",
       @pre="onPre",
-      @next="onNext"
+      @next="onNext",
+      @tag-click="onTagClick"
     )
     div(
       v-for="p in currentPagedPictures",
@@ -39,7 +41,17 @@
 
   export default {
     mixins: [mixin],
+    computed: {
+      checkedMap () {
+        return {
+          [this.current.tagId]: true
+        }
+      }
+    },
     methods: {
+      onTagClick ({ tag }) {
+        this.$store.commit(mTypes.EXPLORER_TOGGLE_TAG, { tagId: tag.id })
+      },
       onPicClick (picture) {
         this.$store.commit(mTypes.SET_PICTURE, { pictureId: picture.id })
         this.$router.push('viewer')

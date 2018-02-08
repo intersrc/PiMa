@@ -4,12 +4,14 @@
       ref="nav",
       :p-page="page",
       :p-page-length="pageLength",
+      :checked-map="checkedMap",
       @page="onPage",
       @pre="onPre",
       @next="onNext",
       @scale="onScale",
       @scale-plus="onScalePlus",
       @scale-minus="onScaleMinus",
+      @tag-click="onTagClick"
     )
     img(
       ref="img",
@@ -31,6 +33,7 @@
 
 <script>
   import mixin from 'pima-components/mixin'
+  import * as aTypes from 'pima-store/actionTypes'
   import * as gTypes from 'pima-store/getterTypes'
   import * as mTypes from 'pima-store/mutationTypes'
 
@@ -54,39 +57,22 @@
           margin: `${this.imgStyleMargin}px 0`,
           height: this.imgStyleHeight
         }
+      },
+      checkedMap () {
+        const map = {}
+        this.currentPictureTagIds.forEach(tagId => { map[tagId] = true })
+        return map
       }
     },
-    mounted () {
-      window.addEventListener('keydown', this.onWindowKeydown)
-    },
-    beforeDestroy () {
-      window.removeEventListener('keydown', this.onWindowKeydown)
-
-    },
     methods: {
-      onWindowKeydown (event) {
-        switch (event.key) {
-          case 'a':
-          case 'ArrowLeft':
-            this.onPre()
-            break
-          case 'd':
-          case 'ArrowRight':
-            this.onNext()
-            break
-          case 'w':
-          case 'ArrowUp':
-            this.onScaleMinus()
-            break
-            case 's':
-          case 'ArrowDown':
-            this.onScalePlus()
-            break
-          default:
-            this.onScale()
-            break
-        }
+      onTagClick ({ tag }) {
+        this.$store.commit(mTypes.VIEWER_TOGGLE_TAG, {
+          pictureId: this.currentPicture.id,
+          tagId: tag.id
+        })
+        this.$store.dispatch(aTypes.SAVE_TAGS)
       },
+
       updateImgStyleHeight () {
         if (this.$refs.img) {
           const scale = this.current.scale

@@ -10,7 +10,7 @@ export const cover = (object, payload) => {
 
 const notyDefault = {
   theme: 'mint',
-  timeout: 3000
+  timeout: 1000
 }
 export const notySuccess = (message) => {
   new Noty({

@@ -25,6 +25,9 @@ export default {
     },
     currentPicture () {
       return this.$store.getters[gTypes.CURRENT_PICTURE]
+    },
+    currentPictureTagIds () {
+      return this.$store.getters[gTypes.CURRENT_PICTURE_TAG_IDS]
     }
   },
   methods: {

@@ -1,5 +1,6 @@
 <template lang="pug">
   div(class="pima-nav")
+    div(class="pima-nav__placeholder")
     table(class="pima-nav__table")
       tr
         td(style="text-align: left;")
@@ -31,6 +32,16 @@
             @click="onTags"
           )
             i(class="fas fa-tags fa-3x")
+          div(
+            class="pima-nav__button",
+            @click="onPre"
+          )
+            i(class="fas fa-arrow-circle-left fa-3x")
+          div(
+            class="pima-nav__button",
+            @click="onNext"
+          )
+            i(class="fas fa-arrow-circle-right fa-3x")
         td(style="text-align: right;")
           div(class="pima-nav__select")
             select(v-model='selectValue')
@@ -40,16 +51,21 @@
               ) {{ n }}
             span &nbsp;/&nbsp;
             span {{ pPageLength }}
-    div(
-      class="pima-nav__left",
-      @click="onPre"
-    )
-      i(class="fas fa-arrow-circle-left fa-7x")
-    div(
-      class="pima-nav__right",
-      @click="onNext"
-    )
-      i(class="fas fa-arrow-circle-right fa-7x")
+    div(class="pima-nav__tags-container")
+      pima-tags(
+        :checked-map="checkedMap",
+        @tag-click="onTagClick"
+      )
+    //- div(
+    //-   class="pima-nav__left",
+    //-   @click="onPre"
+    //- )
+    //-   i(class="fas fa-arrow-circle-left fa-7x")
+    //- div(
+    //-   class="pima-nav__right",
+    //-   @click="onNext"
+    //- )
+    //-   i(class="fas fa-arrow-circle-right fa-7x")
 </template>
 
 <style lang="stylus">
@@ -59,7 +75,7 @@
     vertical-align middle
     &:not(:first-child)
       margin-left 16px
-  .pima-nav
+  .pima-nav__placeholder
     height 54px
   .pima-nav__table
     width 100%
@@ -77,6 +93,14 @@
   .pima-nav__button
     pima-nav-item()
     cursor pointer
+  .pima-nav__tags-container
+    position fixed
+    top 54px
+    left 0
+    text-align left
+    padding 16px
+    background-color: rgba(0, 0, 0, 0.5)
+    border-radius 8px
   .pima-nav__left, .pima-nav__right
     display inline-block
     position fixed
@@ -107,6 +131,12 @@
       pPageLength: {
         type: Number,
         default: 1
+      },
+      checkedMap: {
+        type: Object,
+        default: () => {
+          return {}
+        }
       }
     },
     computed: {
@@ -119,7 +149,36 @@
         }
       }
     },
+    mounted () {
+      window.addEventListener('keydown', this.onWindowKeydown)
+    },
+    beforeDestroy () {
+      window.removeEventListener('keydown', this.onWindowKeydown)
+    },
     methods: {
+      onWindowKeydown (event) {
+        switch (event.key) {
+          case 'a':
+          case 'ArrowLeft':
+            this.onPre()
+            break
+          case 'd':
+          case 'ArrowRight':
+            this.onNext()
+            break
+          case 'w':
+          case 'ArrowUp':
+            this.onScaleMinus()
+            break
+            case 's':
+          case 'ArrowDown':
+            this.onScalePlus()
+            break
+          default:
+            this.onScale()
+            break
+        }
+      },
       onExplorerClick () {
         this.$router.push('explorer')
       },
@@ -140,6 +199,9 @@
       },
       onTags () {
         this.$router.push('tag-manage')
+      },
+      onTagClick ({ tag }) {
+        this.$emit('tag-click', { tag })
       }
     }
   }

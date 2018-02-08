@@ -1,7 +1,9 @@
 <template lang="pug">
   div
     router-view
-    pre(v-if="isStatic") {{ JSON.stringify($store.state, null, 2) }}
+    template(v-if="isStatic")
+      pre{{ JSON.stringify(currentPictureTagIds, null, 2) }}
+      pre {{ JSON.stringify($store.state, null, 2) }}
 </template>
 
 <style lang="stylus">
@@ -23,8 +25,8 @@
     components: {},
     mixins: [mixin],
     mounted () {
-      // this.$store.dispatch(aTypes.SCAN_BASE, { path: 'D:/Downloads/' })
-      this.$store.dispatch(aTypes.READ_DATA)
+      this.$store.dispatch(aTypes.SCAN_BASE, { path: 'D:/Downloads/' })
+      // this.$store.dispatch(aTypes.READ_DATA)
     }
   }
 </script>

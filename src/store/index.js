@@ -62,23 +62,23 @@ const state = {
   tags: {
     '0': {
       id: '0',
-      name: 'ALL',
-      children: ['1', '2']
-    },
-    '1': {
-      id: '1',
-      name: 'AAA',
+      name: 'tagme',
       children: []
-    },
-    '2': {
-      id: '2',
-      name: 'BBB',
-      children: []
-    },
-    '3': {
-      id: '3',
-      name: 'CCC',
-      children: []
+    // },
+    // '1': {
+    //   id: '1',
+    //   name: 'AAA',
+    //   children: []
+    // },
+    // '2': {
+    //   id: '2',
+    //   name: 'BBB',
+    //   children: []
+    // },
+    // '3': {
+    //   id: '3',
+    //   name: 'CCC',
+    //   children: []
     }
   }
 }
@@ -99,13 +99,13 @@ const getters = {
     return state.bases[state.current.baseIndex]
   },
   [gTypes.CURRENT_PICTURES] (state) {
-    const currentBase = getters[gTypes.CURRENT_BASE](state)
     const tagId = state.current.tagId
-    let pictures
+    let pictures = []
     if (tagId) {
-      pictures = currentBase ? currentBase.tagged[tagId] : []
+      state.bases.forEach(base => {
+        pictures = pictures.concat(base.tagged[tagId].map(pictureId => base.all[pictureId]) || [])
+      })
     } else {
-      pictures = []
       state.bases.forEach(base => {
         pictures = pictures.concat(Object.keys(base.all).map(id => base.all[id]))
       })
@@ -133,6 +133,20 @@ const getters = {
   [gTypes.CURRENT_PICTURE] (state) {
     const currentBase = getters[gTypes.CURRENT_BASE](state)
     return currentBase ? currentBase.all[state.current.pictureId] : null
+  },
+  [gTypes.CURRENT_PICTURE_TAG_IDS] (state) {
+    const pictureId = state.current.pictureId
+    const currentBase = getters[gTypes.CURRENT_BASE](state)
+    const tagIds = []
+    if (currentBase) {
+      for (const tagId in currentBase.tagged) {
+        const list = currentBase.tagged[tagId]
+        if (list.indexOf(pictureId) >= 0) {
+          tagIds.push(tagId)
+        }
+      }
+    }
+    return tagIds
   },
   [gTypes.CURRENT_PICTURE_PAGE] (state) {
     const pictures = getters[gTypes.CURRENT_PICTURES](state)
@@ -203,7 +217,9 @@ const actions = {
         const base = {
           path,
           all,
-          tagged: {}
+          tagged: {
+            '0': Object.keys(all)
+          }
         }
         commit(mTypes.ADD_BASE, { base })
         dispatch(aTypes.SAVE_BASE, { path: base.path })
@@ -237,6 +253,13 @@ const mutations = {
   [mTypes.SET_PICTURE] (state, { pictureId }) {
     state.current.pictureId = pictureId
   },
+  [mTypes.EXPLORER_TOGGLE_TAG] (state, { tagId }) {
+    if (state.current.tagId === tagId) {
+      state.current.tagId = ''
+    } else {
+      state.current.tagId = tagId
+    }
+  },
   [mTypes.SET_PICTURE_BY_PAGE] (state, { page, delta }) {
     const pictures = getters[gTypes.CURRENT_PICTURES](state)
     if (delta) {
@@ -268,6 +291,32 @@ const mutations = {
         base
       ]
     }
+  },
+
+  [mTypes.VIEWER_TOGGLE_TAG] (state, { pictureId, tagId }) {
+    const baseIndex = state.current.baseIndex
+    const tagged = state.bases[baseIndex].tagged
+    const toggle = (tid) => {
+      if (!tagged[tid]) {
+        tagged[tid] = []
+      }
+      if (tagged[tid].indexOf(pictureId) >= 0) {
+        tagged[tid] = tagged[tid].filter(pid => pid !== pictureId)
+      } else {
+        tagged[tid].unshift(pictureId)
+        tagged[tid] = [...tagged[tid]]
+      }
+      for (const t in state.tags) {
+        const tag = state.tags[t]
+        if (tag.children.indexOf(tid) >= 0) {
+          toggle(tag.id)
+        }
+      }
+    }
+    toggle(tagId)
+    state.bases[baseIndex].tagged = { ...state.bases[baseIndex].tagged }
+    state.bases[baseIndex] = { ...state.bases[baseIndex] }
+    state.bases = [...state.bases]
   }
 }
 
