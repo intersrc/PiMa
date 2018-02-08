@@ -11,7 +11,8 @@
     )
     div(
       v-for="p in currentPagedPictures",
-      class="pima-explorer__thumb"
+      class="pima-explorer__thumb",
+      :class="{ 'pima-explorer__thumb--selected': currentPicture && p.id === currentPicture.id }"
       :style="{ backgroundImage: `url('${getSrc(p)}')` }",
       @click="onPicClick(p)"
     )
@@ -33,6 +34,8 @@
     margin-top $thumb-margin
     margin-left ($thumb-margin / 2)
     margin-right ($thumb-margin / 2)
+  .pima-explorer__thumb--selected
+    border: $thumb-border--selected
 </style>
 
 <script>

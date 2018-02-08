@@ -64,21 +64,6 @@ const state = {
       id: '0',
       name: 'tagme',
       children: []
-    // },
-    // '1': {
-    //   id: '1',
-    //   name: 'AAA',
-    //   children: []
-    // },
-    // '2': {
-    //   id: '2',
-    //   name: 'BBB',
-    //   children: []
-    // },
-    // '3': {
-    //   id: '3',
-    //   name: 'CCC',
-    //   children: []
     }
   }
 }
@@ -168,6 +153,9 @@ const actions = {
               if (file === 'tags.json') {
                 commit(mTypes.SET, { tags: JSON.parse(data) })
                 notySuccess('Tags read.')
+              } else if (file === 'current.json') {
+                commit(mTypes.SET, { current: JSON.parse(data) })
+                notySuccess('Current read.')
               } else {
                 const base = JSON.parse(data)
                 commit(mTypes.ADD_BASE, { base })
@@ -234,6 +222,9 @@ const actions = {
   },
   [aTypes.SAVE_TAGS] ({ state, commit }) {
     writeFile(`data/tags.json`, JSON.stringify(state.tags, null, 2), 'Tags saved.')
+  },
+  [aTypes.SAVE_CURRENT] ({ state, commit }) {
+    writeFile(`data/current.json`, JSON.stringify(state.current, null, 2), 'Current saved.')
   }
 }
 
@@ -270,6 +261,10 @@ const mutations = {
     page = Math.min(page, pictures.length - 1)
     const pictureId = pictures[page].id
     state.current.pictureId = pictureId
+
+    // current.page
+    const perPage = getters[gTypes.PER_PAGE](state)
+    state.current.page = Math.floor(page / perPage)
   },
   [mTypes.SET_SCALE] (state, { scale }) {
     state.current.scale = scale

@@ -42,6 +42,16 @@
             @click="onNext"
           )
             i(class="fas fa-arrow-circle-right fa-3x")
+          div(
+            class="pima-nav__button",
+            @click="onSave"
+          )
+            i(class="fas fa-save fa-3x")
+          div(
+            class="pima-nav__button",
+            @click="onScan"
+          )
+            i(class="fas fa-barcode fa-3x")
         td(style="text-align: right;")
           div(class="pima-nav__select")
             select(v-model='selectValue')
@@ -119,6 +129,7 @@
 
 <script>
   import mixin from 'pima-components/mixin'
+  import * as aTypes from 'pima-store/actionTypes'
   import * as mTypes from 'pima-store/mutationTypes'
 
   export default {
@@ -202,6 +213,17 @@
       },
       onTagClick ({ tag }) {
         this.$emit('tag-click', { tag })
+      },
+      onSave () {
+        this.$store.dispatch(aTypes.SAVE_TAGS)
+        this.$store.dispatch(aTypes.SAVE_CURRENT)
+      },
+      onScan () {
+        if (this.isStatic) {
+          this.$store.dispatch(aTypes.SCAN_BASE, { path: './web/' })
+        } else {
+          this.$store.dispatch(aTypes.SCAN_BASE, { path: 'D:/Downloads/' })
+        }
       }
     }
   }

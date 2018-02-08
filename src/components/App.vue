@@ -2,7 +2,7 @@
   div
     router-view
     template(v-if="isStatic")
-      pre{{ JSON.stringify(currentPictureTagIds, null, 2) }}
+      pre {{ JSON.stringify(currentPictureTagIds, null, 2) }}
       pre {{ JSON.stringify($store.state, null, 2) }}
 </template>
 
@@ -14,7 +14,7 @@
     font-size: 14px
     line-height: 21px
   select
-    border-color: $thumb-border-color
+    border-color: $border-color
 </style>
 
 <script>
@@ -25,8 +25,7 @@
     components: {},
     mixins: [mixin],
     mounted () {
-      this.$store.dispatch(aTypes.SCAN_BASE, { path: 'D:/Downloads/' })
-      // this.$store.dispatch(aTypes.READ_DATA)
+      this.$store.dispatch(aTypes.READ_DATA)
     }
   }
 </script>
