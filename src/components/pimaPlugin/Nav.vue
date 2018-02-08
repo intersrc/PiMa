@@ -29,6 +29,11 @@
           ) {{ current.scale }}
           div(
             class="pima-nav__button",
+            @click="onTag"
+          )
+            i(class="fas fa-tag fa-3x")
+          div(
+            class="pima-nav__button",
             @click="onTags"
           )
             i(class="fas fa-tags fa-3x")
@@ -105,12 +110,15 @@
     cursor pointer
   .pima-nav__tags-container
     position fixed
-    top 54px
+    padding-top 54px
+    top 0
     left 0
     text-align left
     padding 16px
     background-color: rgba(0, 0, 0, 0.5)
     border-radius 8px
+    max-height 100%
+    overflow-y auto
   .pima-nav__left, .pima-nav__right
     display inline-block
     position fixed
@@ -208,6 +216,9 @@
       onScaleMinus () {
         this.$emit('scale-minus')
       },
+      onTag () {
+        this.$store.dispatch(aTypes.READ_TAGS)
+      },
       onTags () {
         this.$router.push('tag-manage')
       },
@@ -215,8 +226,9 @@
         this.$emit('tag-click', { tag })
       },
       onSave () {
-        this.$store.dispatch(aTypes.SAVE_TAGS)
         this.$store.dispatch(aTypes.SAVE_CURRENT)
+        this.$store.dispatch(aTypes.SAVE_ALL_BASES)
+        this.$store.dispatch(aTypes.SAVE_TAGS)
       },
       onScan () {
         if (this.isStatic) {

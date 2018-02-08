@@ -64,13 +64,17 @@
         return map
       }
     },
+    mounted () {
+      const navHeight = this.$refs.nav.$el.clientHeight
+      const viewerHeight = window.innerHeight - navHeight - this.imgStyleMargin * 2
+      this.imgStyleHeight =  `${viewerHeight}px`
+    },
     methods: {
       onTagClick ({ tag }) {
         this.$store.commit(mTypes.VIEWER_TOGGLE_TAG, {
           pictureId: this.currentPicture.id,
           tagId: tag.id
         })
-        this.$store.dispatch(aTypes.SAVE_TAGS)
       },
 
       updateImgStyleHeight () {

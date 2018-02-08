@@ -167,6 +167,26 @@ const actions = {
       }
     })
   },
+  [aTypes.READ_TAGS] ({ commit }, payload) {
+    fs.readdir('data', (err, files) => {
+      if (err) {
+        notyError(err)
+      } else {
+        files
+        .filter(file => file === 'tags.json')
+        .forEach(file => {
+          fs.readFile(`data/${file}`, 'utf8', (err, data) => {
+            if (err) {
+              notyError(err)
+            } else {
+              commit(mTypes.SET, { tags: JSON.parse(data) })
+              notySuccess('Tags read.')
+            }
+          })
+        })
+      }
+    })
+  },
   // path: 'D:/Downloads/'
   [aTypes.SCAN_BASE] ({ commit, dispatch, getters }, { path }) {
     // hash 验证，存在则更新，不存在则创建
@@ -219,6 +239,9 @@ const actions = {
     if (base) {
       writeFile(`data/${hash(path)}.json`, JSON.stringify(base, null, 2), `Base ${path} saved.`)
     }
+  },
+  [aTypes.SAVE_ALL_BASES] ({ state, commit }) {
+    state.bases.forEach(base => writeFile(`data/${hash(base.path)}.json`, JSON.stringify(base, null, 2), `Base ${base.path} saved.`))
   },
   [aTypes.SAVE_TAGS] ({ state, commit }) {
     writeFile(`data/tags.json`, JSON.stringify(state.tags, null, 2), 'Tags saved.')
@@ -291,20 +314,24 @@ const mutations = {
   [mTypes.VIEWER_TOGGLE_TAG] (state, { pictureId, tagId }) {
     const baseIndex = state.current.baseIndex
     const tagged = state.bases[baseIndex].tagged
-    const toggle = (tid) => {
+    const toggle = (tid, val) => {
       if (!tagged[tid]) {
         tagged[tid] = []
       }
-      if (tagged[tid].indexOf(pictureId) >= 0) {
-        tagged[tid] = tagged[tid].filter(pid => pid !== pictureId)
-      } else {
+      let target = tagged[tid].indexOf(pictureId) < 0
+      if (val) {
+        target = val.value
+      }
+      if (target) {
         tagged[tid].unshift(pictureId)
         tagged[tid] = [...tagged[tid]]
+      } else {
+        tagged[tid] = tagged[tid].filter(pid => pid !== pictureId)
       }
       for (const t in state.tags) {
         const tag = state.tags[t]
         if (tag.children.indexOf(tid) >= 0) {
-          toggle(tag.id)
+          toggle(tag.id, { value: target })
         }
       }
     }
