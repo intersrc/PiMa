@@ -95,8 +95,14 @@
   export default {
     mixins: [mixin],
     props: {
-      pPage: Number,
-      pPageLength: Number
+      pPage: {
+        type: Number,
+        default: 1
+      },
+      pPageLength: {
+        type: Number,
+        default: 1
+      }
     },
     computed: {
       selectValue: {

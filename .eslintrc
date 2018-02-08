@@ -1,8 +1,15 @@
 {
   "root": true,
-  "extends": ["vue"],
+  "parserOptions": {
+    "parser": "babel-eslint",
+    "sourceType": "module"
+  },
+  "extends": ["plugin:vue/recommended"],
   "plugins": ["vue"],
   "globals": {
     "fs": false
+  },
+  "rules": {
+    "no-var": 2
   }
 }

@@ -1,12 +1,26 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import hash from 'object-hash'
+import * as aTypes from 'pima-store/actionTypes'
 import * as gTypes from 'pima-store/getterTypes'
 import * as mTypes from 'pima-store/mutationTypes'
-import { cover } from 'pima-utils'
+import { cover, notySuccess, notyError } from 'pima-utils'
 
 import viewer from './modules/viewer'
 
 Vue.use(Vuex)
+
+const writeFile = (path, text, successMessage) => {
+  fs.mkdir('data', 0o777, () => {
+    fs.writeFile(path, text, 'utf8', (err) => {
+      if (err) {
+        notyError(err)
+      } else {
+        notySuccess(successMessage)
+      }
+    })
+  })
+}
 
 /*
 {
@@ -20,7 +34,7 @@ Vue.use(Vuex)
       }
     },
     tagged: {
-      'tid': ['pid']
+      'tid': ['pid'] // 有顺序
     }
   }],
   tags: {
@@ -55,7 +69,7 @@ const getters = {
     if (isStatic) {
       return 10
     } else {
-      return 100
+      return 15
     }
   },
   [gTypes.CURRENT_BASE] (state) {
@@ -97,6 +111,76 @@ const getters = {
 }
 
 const actions = {
+  [aTypes.READ_DATA] ({ commit }, payload) {
+    fs.readdir('data', (err, files) => {
+      if (err) {
+        notyError(err)
+      } else {
+        files.forEach(file => {
+          fs.readFile(`data/${file}`, 'utf8', (err, data) => {
+            if (err) {
+              notyError(err)
+            } else {
+              if (file === 'tags.json') {
+                commit(mTypes.SET, { tags: JSON.parse(data) })
+                notySuccess('Tags read.')
+              } else {
+                const base = JSON.parse(data)
+                commit(mTypes.ADD_BASE, { base })
+                notySuccess(`Base ${base.path} read.`)
+              }
+            }
+          })
+        })
+      }
+    })
+  },
+  // path: 'D:/Downloads/'
+  [aTypes.SCAN_BASE] ({ commit, dispatch, getters }, { path }) {
+    // hash 验证，存在则更新，不存在则创建
+    const createFileId = (file) => `${hash(file)}-${hash(Math.random())}`
+
+    fs.readdir(path, (err, files) => {
+      if (err) {
+        notyError(err)
+      } else {
+        const all = {}
+        files
+          .filter(file => {
+            const splits = file.split('.')
+            const exts = ['png', 'jpg', 'jpeg', 'gif']
+            return exts.indexOf(splits[splits.length - 1]) >= 0
+          })
+          .forEach(file => {
+            let id = createFileId(file)
+            while (all[id]) {
+              id = createFileId(file)
+            }
+            all[id] = {
+              id,
+              path: file,
+              scannedTime: (new Date()).getTime()
+            }
+          })
+        const base = {
+          path,
+          all,
+          tagged: {}
+        }
+        commit(mTypes.ADD_BASE, { base })
+        dispatch(aTypes.SAVE_BASE, { path: base.path })
+      }
+    })
+  },
+  [aTypes.SAVE_BASE] ({ state, commit }, { path }) {
+    const base = state.bases.find(b => b.path === path)
+    if (base) {
+      writeFile(`data/${hash(path)}.json`, JSON.stringify(base, null, 2), `Base ${path} saved.`)
+    }
+  },
+  [aTypes.SAVE_TAGS] ({ state, commit }) {
+    writeFile(`data/tags.json`, JSON.stringify(state.tags, null, 2), 'Tags saved.')
+  }
 }
 
 const mutations = {
@@ -128,6 +212,24 @@ const mutations = {
   },
   [mTypes.SET_SCALE] (state, { scale }) {
     state.current.scale = scale
+  },
+  [mTypes.ADD_BASE] (state, { base }) {
+    const index = state.bases.findIndex(b => b.path === base.path)
+    if (index >= 0) {
+      for (const pictureId in base.all) {
+        if (!state.bases[index].all[pictureId]) {
+          state.bases[index].all[pictureId] = base.all[pictureId]
+        }
+      }
+      state.bases[index].all = { ...state.bases[index].all }
+      state.bases[index] = { ...state.bases[index] }
+      state.bases = [...state.bases]
+    } else {
+      state.bases = [
+        ...state.bases,
+        base
+      ]
+    }
   }
 }
 

@@ -17,10 +17,14 @@
 
 <script>
   import mixin from 'pima-components/mixin'
+  import * as aTypes from 'pima-store/actionTypes'
 
   export default {
+    components: {},
     mixins: [mixin],
-    components: {
+    mounted () {
+      // this.$store.dispatch(aTypes.SCAN_BASE, { path: 'D:/Downloads/' })
+      this.$store.dispatch(aTypes.READ_DATA)
     }
   }
 </script>

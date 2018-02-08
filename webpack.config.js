@@ -1,9 +1,9 @@
-var webpack = require('webpack')
-var path = require('path')
-var postcss = require('./postcss.config')
+const webpack = require('webpack')
+const path = require('path')
+const postcss = require('./postcss.config')
 
 module.exports = function (env) {
-  var config = {
+  const config = {
     // target: 'node',
     resolve: {
       extensions: ['.js', '.vue', '.json'],
@@ -24,6 +24,14 @@ module.exports = function (env) {
     },
     module: {
       rules: [{
+        test: /\.(js|vue)$/,
+        loader: 'eslint-loader',
+        enforce: 'pre',
+        exclude: /node_modules/,
+        options: {
+          formatter: require('eslint-friendly-formatter')
+        }
+      }, {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: 'babel-loader'
