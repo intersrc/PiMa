@@ -8,20 +8,19 @@ export const cover = (object, payload) => {
   }
 }
 
-const notyDefault = {
+Noty.setMaxVisible(20)
+Noty.overrideDefaults({
   theme: 'mint',
-  timeout: 1000
-}
+  timeout: 300
+})
 export const notySuccess = (message) => {
   new Noty({
-    ...notyDefault,
     type: 'success',
     text: message
   }).show()
 }
 export const notyError = (message) => {
   new Noty({
-    ...notyDefault,
     type: 'error',
     text: message
   }).show()

@@ -26,3 +26,5 @@ new Vue({
   el: document.getElementById('app'),
   render: h => h(Vue.component('app', App))
 })
+
+window.store = store

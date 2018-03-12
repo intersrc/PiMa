@@ -3,7 +3,7 @@
     class="pima-tags"
   )
     pima-tag(
-      v-for="tag in tags",
+      v-for="tag in tagList",
       :key="tag.id",
       :tag="tag",
       :checked-map="checkedMap",
@@ -17,7 +17,7 @@
 
 <script>
   import mixin from 'pima-components/mixin'
-  import * as mTypes from 'pima-store/mutationTypes'
+  // import * as mTypes from 'pima-store/mutationTypes'
 
   export default {
     mixins: [mixin],

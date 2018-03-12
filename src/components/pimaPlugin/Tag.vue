@@ -20,14 +20,21 @@
   .pima-tag
     cursor pointer
     &:not(:first-child)
-      margin-top: 8px
+      margin-top 4px
   .pima-tag__container
     display inline-block
-    border 2px solid
-    border-radius 8px
-    padding: 4px 8px
+    border 1px solid
+    border-radius 4px
+    font-size 12px
+    padding 0 8px
+    &:hover
+      border-left-width 4px
+      border-right-width 4px
+      font-weight bold
+    &:active
+      opacity 0.5
   .pima-tag__child
-    margin-left: 32px
+    margin-left 16px
 </style>
 
 <script>

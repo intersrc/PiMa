@@ -1,4 +1,5 @@
 import Explorer from './components/Explorer'
+import Scan from './components/Scan'
 import TagManage from './components/TagManage'
 import Viewer from './components/Viewer'
 
@@ -8,6 +9,9 @@ const routes = [{
 }, {
   path: '/explorer',
   component: Explorer
+}, {
+  path: '/scan',
+  component: Scan
 }, {
   path: '/tag-manage',
   component: TagManage

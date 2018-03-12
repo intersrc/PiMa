@@ -1,6 +1,7 @@
 export const READ_DATA = 'READ_DATA'
 export const READ_TAGS = 'READ_TAGS'
 export const SCAN_BASE = 'SCAN_BASE'
+export const SCAN_ALL_BASES = 'SCAN_ALL_BASES'
 export const SAVE_BASE = 'SAVE_BASE'
 export const SAVE_ALL_BASES = 'SAVE_ALL_BASES'
 export const SAVE_TAGS = 'SAVE_TAGS'

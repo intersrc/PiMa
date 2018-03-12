@@ -2,11 +2,17 @@ import * as gTypes from 'pima-store/getterTypes'
 
 export default {
   computed: {
+    state () {
+      return this.$store.state
+    },
     current () {
-      return this.$store.state.current
+      return this.state.current
     },
     tags () {
-      return this.$store.state.tags
+      return this.state.tags
+    },
+    tagList () {
+      return this.$store.getters[gTypes.TAG_LIST]
     },
     pageLength () {
       return this.$store.getters[gTypes.PAGE_LENGTH]
@@ -32,16 +38,22 @@ export default {
   },
   methods: {
     getSrc (picture) {
+      let src
       if (picture) {
-        const { path } = picture
+        const { basePath, path } = picture
         if (this.isStatic) {
-          return `./web/${path}`
+          src = `./web/${path}`
         } else {
-          return `file:///${this.currentBase.path}${path}`
+          // src = `file:///${this.currentBase.path}${path}`
+          src = `file:///${basePath}${path}`
         }
       } else {
-        return ''
+        src = ''
       }
+      return src
+    },
+    getIsVideo (picture) {
+      return /\.(mp4|webm)$/.test(picture.path)
     }
   }
 }

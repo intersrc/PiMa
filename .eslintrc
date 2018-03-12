@@ -4,10 +4,12 @@
     "parser": "babel-eslint",
     "sourceType": "module"
   },
-  "extends": ["plugin:vue/recommended"],
+  "extends": ["eslint:recommended", "plugin:vue/recommended"],
   "plugins": ["vue"],
   "globals": {
-    "fs": false
+    "dialog": false,
+    "fs": false,
+    "process": false
   },
   "rules": {
     "no-var": 2

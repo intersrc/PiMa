@@ -1,5 +1,10 @@
 /data
 /dist
+/export
+/misc/changeBasePath.js
+/misc/renameFiles.js
+/misc/tagByPath.js
+/misc/updateTaggedTime.js
 /node_modules
 /web
 /index-web.html
